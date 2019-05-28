@@ -39,6 +39,7 @@ public:
     OldValue = in;
     return ret;
   }
+  static bool getValue(void) { return Input::value(); };
 private:
   static uint8_t OldValue;
 };

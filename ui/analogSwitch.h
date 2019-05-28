@@ -75,7 +75,7 @@ public:
   typedef Mapper<Count, Hyst> Map;
   static uint8_t getValue(void)
   {
-    return Map::get(Adc::Read(Port) >> 2);
+    return Map::getNewIndex(Adc::Read(Port) >> 2, 0);
   }
   static uint8_t getNewIndex(uint8_t const index)
   {
