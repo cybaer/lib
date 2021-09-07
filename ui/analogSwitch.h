@@ -84,4 +84,27 @@ public:
   static void init(void) { Map::init(); }
 };
 
+template <class Adc, uint8_t Port, int8_t R1, int8_t R2, int8_t R3, int8_t R4>
+class AnalogBinSwitch
+{
+  static const uint16_t Vin = 255LU;
+  static const uint16_t V0 = (R3 + R4) * Vin / (R1 + R2 + R3 + R4);
+  static const uint16_t V1 = (R3 + R4) * Vin / (R1 + R3 + R4);
+  static const uint16_t V2 = R4 * Vin / (R1 + R2 + R4);
+  static const uint16_t V3 = R4 * Vin / (R1 + R4);
+  static const uint8_t T2 = (V2 + V0) / 2;
+  static const uint8_t T0 = (V0 + V3) / 2;
+  static const uint8_t T3 = (V3 + V1) / 2;
+
+public:
+  static uint16_t getValue(void) { return Adc::Read(Port) >> 2; }
+  static uint8_t getButton(void)
+  {
+    uint8_t val = Adc::Read(Port) >> 2;
+    return    val < T2 ? 2 
+            : val < T0 ? 0
+            : val < T3 ? 3
+            : 1 ;
+  }
+};
 #endif /* ANALOGSWITCH_H_ */
